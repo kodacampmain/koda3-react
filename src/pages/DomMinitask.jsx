@@ -1,9 +1,5 @@
 import { Component, Fragment } from "react";
-import logo from "../assets/48.png";
-
-function ListItem(props) {
-  return <li>{props.listText}</li>;
-}
+// import Header from "../components/Header";
 
 class DomMinitask extends Component {
   state = {
@@ -26,35 +22,9 @@ class DomMinitask extends Component {
     // alert("unmounting");
   }
   render() {
-    const navBtn = ["Home", "Products", "About"];
-    const setCount = () =>
-      this.setState((state) => {
-        return { ...state, count: state.count + 1 };
-      });
     return (
       <Fragment>
-        <header>
-          <img src={logo} alt="logo" />
-          <nav>
-            <ul>
-              {navBtn.map((nav, idx) => {
-                // return <li key={idx}>{nav}</li>
-                return <ListItem listText={nav} key={idx} />;
-              })}
-            </ul>
-          </nav>
-          <div className="logged-in">
-            <button>Sign Out</button>
-          </div>
-          <div className="logged-out">
-            <button onClick={setCount}>Sign in</button>
-          </div>
-          <div className="hamburger-menu">
-            <div className="top"></div>
-            <div className="middle"></div>
-            <div className="bottom"></div>
-          </div>
-        </header>
+        {/* <Header /> */}
 
         <section className="login">
           <form>

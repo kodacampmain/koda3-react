@@ -1,3 +1,12 @@
+/**
+ * Komponen Satuan dari Movie
+ * @param {Object} props
+ * @param {Object} props.movie - Object Movie
+ * @param {number} props.movie.id - Id dari Movie
+ * @param {string} props.movie.title - Judul dari Movie
+ * @param {string} props.movie.poster_path - File image dari Movie
+ * @param {string[]} props.movie.genres - Genre-genre dari Movie
+ */
 function MovieItem(props) {
   const { movie } = props;
   return (

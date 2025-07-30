@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import MovieItem from "../components/MovieItem";
+// import Header from "../components/Header";
 
 function Movies() {
   const [movies, setMovies] = useState([]);
@@ -56,6 +57,7 @@ function Movies() {
   }, []);
   return (
     <>
+      {/* <Header /> */}
       <h1>Movies</h1>
       <section style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
         {genres.size > 0 &&
@@ -74,7 +76,7 @@ function Movies() {
           movies.length > 0 &&
           movies.map((movie) => {
             console.log(movie);
-            return <MovieItem movie={movie} />;
+            return <MovieItem movie={movie}  />;
           })}
       </div>
     </>

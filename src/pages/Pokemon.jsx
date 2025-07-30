@@ -1,13 +1,48 @@
 import { useState, useEffect } from "react";
 
 function Pokemon() {
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState(() => {
+    const initialData = localStorage.getItem("koda3:data");
+    if (!initialData) return [];
+    try {
+      const data = JSON.parse(initialData);
+      if (!Array.isArray(data)) throw new Error("invalid data");
+      return data;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  });
   const [count, setCount] = useState(0);
+  const [error, setError] = useState(null);
   function submitHandler(event) {
     event.preventDefault();
     // mengambil value dari form
     const form = event.target;
     const inputData = {};
+    // cek duplikar data nama
+    let isDuplicate = false;
+    // formData.forEach((data) => {
+    //   if (data.nama === form.nama.value) {
+    //     isDuplicate = true;
+    //   }
+    // });
+    for (let data of formData) {
+      if (data.nama === form.nama.value) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    if (isDuplicate) {
+      setError(new Error("duplicate data"));
+      return;
+    }
+    // validasi nama
+    const re = /^(?=[a-zA-Z]+)[a-zA-Z\s]{1,}$/;
+    if (!re.test(form.nama.value)) {
+      setError(new Error("invalid format"));
+      return;
+    }
     // mengambil data nama & umur
     Object.assign(inputData, {
       nama: form.nama.value,
@@ -16,6 +51,7 @@ function Pokemon() {
     setFormData((formData) => {
       return [...formData, inputData];
     });
+    setError(null);
   }
   // useEffect(() => {
   //   // Start Synchronize (did mount, did update)
@@ -34,6 +70,7 @@ function Pokemon() {
   // Did Update
   useEffect(() => {
     console.log("for formData");
+    localStorage.setItem("koda3:data", JSON.stringify(formData));
   }, [formData]);
   // Every Update
   useEffect(() => {
@@ -52,6 +89,7 @@ function Pokemon() {
       <form onSubmit={submitHandler}>
         <label htmlFor="name">Nama</label>
         <input type="text" name="nama" id="name" />
+        {error && <p>{error.message}</p>}
         <br />
         <label htmlFor="age">Umur</label>
         <input type="number" name="umur" id="age" />

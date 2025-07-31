@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@theme {
+  --font-mysoul: "My Soul", cursive;
+  --my-custom-variable: 70px;
+
+  /* --primary: goldenrod; */
+  /* --color-primary: var(--primary); */
+  --color-primary: goldenrod;
+
+  --spacing-2: 9px;
+  --spacing-1\/10: 10%;
+}
+
+@layer base {
+  h1 {
+    letter-spacing: 10px;
+    @apply rotate-90;
+  }
+}
+
+@layer components {
+  .btn {
+    /* transition: all 1s ease; */
+    @apply hover:text-primary bg-black p-2 text-white [border:2px_solid_black];
+    @variant theme-midnight {
+      color: red;
+    }
+  }
+}
+
+@utility float {
+  transition: all 1s ease;
+  transform: translateX(50px);
+}
+
+@custom-variant theme-midnight {
+  &:where([data-theme="midnight"] *) {
+    @slot;
+  }
+}

@@ -94,7 +94,27 @@ function RouteLayout() {
 }
 
 function Welcome() {
-  return <h1>Welcome</h1>;
+  return (
+    <>
+      <h1 className="font-mysoul bg-primary m-1/10 p-2 text-(size:--my-custom-variable) [border:2px_solid_black] hover:[color:blue]">
+        Welcome
+      </h1>
+      <h1>Hello</h1>
+      <div data-theme="midnight">
+        <button className="btn md:hover:float">Tombol</button>
+      </div>
+      <section>
+        <div data-theme="midnight">
+          <p className="theme-midnight:bg-black theme-midnight:text-white">
+            Hello
+          </p>
+        </div>
+        <div>
+          <p className="theme-midnight:bg-black">World</p>
+        </div>
+      </section>
+    </>
+  );
 }
 
 export default Router;

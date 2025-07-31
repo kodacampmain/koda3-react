@@ -5,6 +5,6 @@ import Router from "./Router";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Router />,
+    <Router />
   </StrictMode>,
 );

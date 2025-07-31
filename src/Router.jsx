@@ -26,14 +26,25 @@ function Router() {
       {page === "movies" && <Movies />} */}
       <Routes>
         {/* index route => di alamat / */}
-        <Route index element={<Welcome />} />
-        <Route element={<RouteLayout />}>
-          <Route path="dom" element={<DomMinitask />} />
-          <Route path="pokemon" element={<Pokemon />} />
-          <Route path="movies" element={<Movies />} />
-          <Route path="app" element={<App />} />
-          <Route path="form" element={<Form />} />
-          <Route path="order" element={<Order />} />
+        {/** / => Welcome
+         * /register => form
+         * /content => dom minitask + RouteLayout
+         * /content/pokemon => pokemon + RouteLayout
+         * /content/app => App + RouteLayout
+         * /movies => movies + RouteLayout
+         * /movies/order => order + RouteLayout */}
+        <Route path="">
+          <Route index element={<Welcome />} />
+          <Route path="register" element={<Form />} />
+          <Route path="content" element={<RouteLayout />}>
+            <Route index element={<DomMinitask />} />
+            <Route path="pokemon" element={<Pokemon />} />
+            <Route path="app" element={<App />} />
+          </Route>
+          <Route path="movies" element={<RouteLayout />}>
+            <Route index element={<Movies />} />
+            <Route path="order" element={<Order />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

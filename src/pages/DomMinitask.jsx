@@ -1,5 +1,6 @@
 import { Component, Fragment } from "react";
 // import Header from "../components/Header";
+import { Link } from "react-router";
 
 class DomMinitask extends Component {
   state = {
@@ -28,7 +29,12 @@ class DomMinitask extends Component {
 
         <section className="login">
           <form>
-            <input type="text" name="email" placeholder="Email" autoComplete="off" />
+            <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              autoComplete="off"
+            />
             <input type="password" name="pwd" placeholder="Password" />
             <button type="submit">Login</button>
           </form>
@@ -63,6 +69,15 @@ class DomMinitask extends Component {
             </tbody>
           </table>
         </section>
+        <Link
+          to={"/content/pokemon"}
+          state={{
+            data: "hello world",
+          }}
+        >
+          {/* navigate("/content/pokemon", {data: "hello world"}) */}
+          Go to Pokemon
+        </Link>
       </Fragment>
     );
   }

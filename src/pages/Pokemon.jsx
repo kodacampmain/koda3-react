@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 // import Header from "../components/Header";
+import { useLocation, useNavigate } from "react-router";
 
 function Pokemon() {
   const [formData, setFormData] = useState(() => {
@@ -17,6 +18,16 @@ function Pokemon() {
   const [count, setCount] = useState(0);
   const [error, setError] = useState(null);
   const [pokemons, setPokemons] = useState([]);
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log(state);
+    if (!state) {
+      navigate("/content", {
+        replace: true,
+      });
+    }
+  }, []);
   function submitHandler(event) {
     event.preventDefault();
     // mengambil value dari form
@@ -80,14 +91,18 @@ function Pokemon() {
             const response = await fetch(pokemon.url);
             if (!response.ok) throw response.statusText;
             const pokemonDetail = await response.json();
-            const pokemonAbilities = pokemonDetail.abilities.map((abilityItem) => {
-              return abilityItem.ability.name;
-            });
+            const pokemonAbilities = pokemonDetail.abilities.map(
+              (abilityItem) => {
+                return abilityItem.ability.name;
+              },
+            );
             Object.assign(obj, {
               abilities: pokemonAbilities,
             });
           } catch (err) {
-            const error = new Error(`Error Fetching Pokemon Detail at index ${idx}\n${err.status}: ${err.statusText}`);
+            const error = new Error(
+              `Error Fetching Pokemon Detail at index ${idx}\n${err.status}: ${err.statusText}`,
+            );
             throw error;
           }
           return obj;
@@ -114,16 +129,18 @@ function Pokemon() {
     <>
       {/* <Header /> */}
       <h1>Pokemon</h1>
-      <main className="grid gap-[10px] grid-cols-3">
+      <main className="grid grid-cols-3 gap-[10px]">
         {pokemons.length > 0 &&
           pokemons.map((pokemon, idx) => {
             return <PokemonItem key={idx} pokemon={pokemon} />;
           })}
       </main>
-      <section className="bg-beige border-2 border-solid border-black p-2.5 mt-2">
+      <section className="bg-beige mt-2 border-2 border-solid border-black p-2.5">
         <canvas id="grafiksaya"></canvas>
       </section>
-      <button onClick={() => setCount((count) => count + 1)}>Clicked {count} times</button>
+      <button onClick={() => setCount((count) => count + 1)}>
+        Clicked {count} times
+      </button>
       <form onSubmit={submitHandler}>
         <label htmlFor="name">Nama</label>
         <input type="text" name="nama" id="name" />
@@ -167,7 +184,7 @@ function PokemonItem({ pokemon }) {
   return (
     <section className="border-2 border-solid border-black p-1.25">
       <div>
-        <p className="text-2xl font-[cursive]">{pokemon.name}</p>
+        <p className="font-[cursive] text-2xl">{pokemon.name}</p>
       </div>
       <div className="flex gap-1.25">
         {pokemon.abilities.map((ability, idx) => {

@@ -3,8 +3,8 @@ import ListItem from "./ListItem.jsx";
 
 function Header() {
   const navBtn = [
-    { text: "DOM", route: "/dom" },
-    { text: "Pokemon", route: "/pokemon" },
+    { text: "DOM", route: "/content" },
+    { text: "Pokemon", route: "/content/pokemon" },
     { text: "Movies", route: "/movies" },
   ];
   const setCount = () =>

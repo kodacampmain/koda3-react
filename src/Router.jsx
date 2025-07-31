@@ -8,6 +8,8 @@ import Header from "./components/Header.jsx";
 import App from "./pages/App.jsx";
 import Form from "./pages/Form.jsx";
 import Order from "./pages/Order.jsx";
+import MovieDetail from "./pages/MovieDetail.jsx";
+import { PrivateRoute, PrivateElement } from "./components/PrivateRoute.jsx";
 
 function Router() {
   // const [page, setPage] = useState("dom");
@@ -42,8 +44,23 @@ function Router() {
             <Route path="app" element={<App />} />
           </Route>
           <Route path="movies" element={<RouteLayout />}>
-            <Route index element={<Movies />} />
-            <Route path="order" element={<Order />} />
+            <Route
+              index
+              element={
+                <PrivateRoute redirectTo="/content/app">
+                  <Movies />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="order"
+              element={
+                <PrivateElement redirectTo="/content/app">
+                  <Order />
+                </PrivateElement>
+              }
+            />
+            <Route path=":movieId" element={<MovieDetail />} />
           </Route>
         </Route>
       </Routes>

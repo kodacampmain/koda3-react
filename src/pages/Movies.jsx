@@ -31,7 +31,14 @@ function Movies() {
         });
         // ambil data movies yang dibutuhkan saja
         const movies = movieResult.results.map((movie) => {
-          const { title, backdrop_path, poster_path, release_date, genre_ids, id } = movie;
+          const {
+            title,
+            backdrop_path,
+            poster_path,
+            release_date,
+            genre_ids,
+            id,
+          } = movie;
           const result = {
             id,
             title,
@@ -76,7 +83,7 @@ function Movies() {
           movies.length > 0 &&
           movies.map((movie) => {
             console.log(movie);
-            return <MovieItem movie={movie}  />;
+            return <MovieItem movie={movie} key={movie.id} />;
           })}
       </div>
     </>

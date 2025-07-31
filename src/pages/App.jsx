@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 // import reactLogo from "../assets/react.svg";
 // import viteLogo from '/vite.svg'
 
@@ -16,8 +17,9 @@ function App() {
   //     // return newCount;
   //   });
   // };
-
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", pwd: "" });
+  const [err, setErr] = useState({ email: null, pwd: null });
   // const [email, setEmail] = useState("");
   // const [pwd, setPwd] = useState("");
   const onChangeHandler = (event) => {
@@ -42,6 +44,8 @@ function App() {
           value={form.email}
           onChange={onChangeHandler}
         />
+        <br />
+        <p className="text-red-500">{err.email && err.email.message}</p>
         <InputWithLabel
           inputId="pwd"
           label="Password"
@@ -53,6 +57,8 @@ function App() {
           value={form.pwd}
           onChange={onChangeHandler}
         />
+        <br />
+        <p className="text-red-500">{err.pwd && err.pwd.message}</p>
         <button
           type="button"
           onClick={() => {
@@ -60,7 +66,38 @@ function App() {
             //   email,
             //   pwd,
             // };
-            console.log(form);
+            const emailRe = /^[\w.-]+@[a-zA-Z]+\.(com|net|gov)$/;
+            const pwdRe =
+              /^(?=.*[a-z])+(?=.*[A-Z])+(?=.*[!@#$%^&*/><])+[a-zA-Z!@#$%^&*/><]{8,}$/;
+            let isError = false;
+            // validasi email
+            if (!emailRe.test(form.email)) {
+              isError = true;
+              setErr((error) => {
+                return { ...error, email: new Error("invalid email format") };
+              });
+            } else {
+              setErr((error) => ({ ...error, email: null }));
+            }
+            if (!pwdRe.test(form.pwd)) {
+              isError = true;
+              setErr((error) => {
+                return {
+                  ...error,
+                  pwd: new Error(
+                    "invalid password format: password minimal 8 karakter dengan minimal 1 huruf kecil, 1 huruf besar dan 1 karakter spesial (!@#$%^&*/><)",
+                  ),
+                };
+              });
+            } else {
+              setErr((error) => ({ ...error, pwd: null }));
+            }
+            console.log(isError);
+            // Proses
+            if (isError) {
+              return;
+            }
+            navigate("/movies");
           }}
         >
           Submit
@@ -82,11 +119,27 @@ function App() {
  * @param {(event: Event) => void} props.onChange
  * @returns
  */
-function InputWithLabel({ inputId, name, type, label, noValidate, value, onChange }) {
+function InputWithLabel({
+  inputId,
+  name,
+  type,
+  label,
+  noValidate,
+  value,
+  onChange,
+}) {
   return (
     <>
       <label htmlFor={inputId}>{label}</label>
-      <input type={type} name={name} id={inputId} formNoValidate={noValidate} value={value} onChange={onChange} />
+      <input
+        type={type}
+        name={name}
+        id={inputId}
+        formNoValidate={noValidate}
+        value={value}
+        onChange={onChange}
+        className="border-2 border-solid border-black p-1.25"
+      />
     </>
   );
 }

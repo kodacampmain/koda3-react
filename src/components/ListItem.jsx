@@ -7,7 +7,7 @@ import { Link } from "react-router";
  */
 function ListItem(props) {
   return (
-    <li>
+    <li className="cursor-pointer select-none">
       <Link to={props.to}>{props.listText}</Link>
     </li>
   );

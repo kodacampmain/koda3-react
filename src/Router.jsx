@@ -7,6 +7,7 @@ import Movies from "./pages/Movies.jsx";
 import Header from "./components/Header.jsx";
 import App from "./pages/App.jsx";
 import Form from "./pages/Form.jsx";
+import Order from "./pages/Order.jsx";
 
 function Router() {
   // const [page, setPage] = useState("dom");
@@ -32,6 +33,7 @@ function Router() {
           <Route path="movies" element={<Movies />} />
           <Route path="app" element={<App />} />
           <Route path="form" element={<Form />} />
+          <Route path="order" element={<Order />} />
         </Route>
       </Routes>
     </BrowserRouter>

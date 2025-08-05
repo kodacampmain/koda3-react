@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 /**
  * Komponen Satuan dari Movie
@@ -11,15 +11,12 @@ import { useNavigate } from "react-router";
  */
 function MovieItem(props) {
   const { movie } = props;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <div>
-      <h3
-        onClick={() => navigate(`/movies/${movie.id}`)}
-        className="cursor-pointer hover:text-blue-500"
-      >
-        {movie.title}
-      </h3>
+      <Link to={`/movies/${movie.id}`}>
+        <h3 className="cursor-pointer hover:text-blue-500">{movie.title}</h3>
+      </Link>
       <img
         src={`${import.meta.env.VITE_PREFIX_IMAGE}${movie.poster_path}`}
         alt="poster"

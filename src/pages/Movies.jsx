@@ -203,9 +203,9 @@ function Movies() {
       <section className="flex justify-evenly gap-2">
         {[1, 2, 3].map((pageNumber, idx) => {
           return (
-            <p
+            <div
               key={idx}
-              className="cursor-pointer"
+              className="cursor-pointer w-25 bg-amber-200 rounded-sm"
               onClick={() => {
                 // logika paginasi
                 setSearchParams((searchParams) => {
@@ -219,7 +219,7 @@ function Movies() {
               }}
             >
               {pageNumber}
-            </p>
+            </div>
           );
         })}
       </section>

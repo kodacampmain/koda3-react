@@ -84,7 +84,13 @@ function RouteLayout() {
   return (
     <>
       <Header />
-      <Outlet />
+      <div className="outlet-grid grid">
+        <div></div>
+        <div>
+          <Outlet />
+        </div>
+        <div></div>
+      </div>
       {/* Outlet ini akan resolve menjadi route element */}
       <footer>
         <p>Ini Footer</p>

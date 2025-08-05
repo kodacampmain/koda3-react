@@ -34,6 +34,10 @@
   transform: translateX(50px);
 }
 
+@utility outlet-grid {
+  grid-template-columns: 10px 1fr 10px;
+}
+
 @custom-variant theme-midnight {
   &:where([data-theme="midnight"] *) {
     @slot;

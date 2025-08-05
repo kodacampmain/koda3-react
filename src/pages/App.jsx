@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import useLocalStorage from "../hooks/useLocalStorage.js";
 // import reactLogo from "../assets/react.svg";
 // import viteLogo from '/vite.svg'
 
@@ -20,8 +21,19 @@ function App() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", pwd: "" });
   const [err, setErr] = useState({ email: null, pwd: null });
+  const [currentUser, setCurrentUser] = useLocalStorage(
+    "koda3:current-user",
+    null,
+  );
   // const [email, setEmail] = useState("");
   // const [pwd, setPwd] = useState("");
+  useEffect(() => {
+    (function () {
+      if (!currentUser) return;
+      if (!currentUser.email) return;
+      navigate("/movies");
+    })();
+  }, [currentUser]);
   const onChangeHandler = (event) => {
     setForm((form) => {
       return {
@@ -97,7 +109,9 @@ function App() {
             if (isError) {
               return;
             }
-            navigate("/movies");
+            setCurrentUser({
+              email: form.email,
+            });
           }}
         >
           Submit

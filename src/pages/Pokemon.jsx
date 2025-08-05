@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 // import Header from "../components/Header";
-import { useLocation, useNavigate } from "react-router";
+// import { useLocation, useNavigate } from "react-router";
 
 function Pokemon() {
   const [formData, setFormData] = useState(() => {
@@ -18,16 +18,17 @@ function Pokemon() {
   const [count, setCount] = useState(0);
   const [error, setError] = useState(null);
   const [pokemons, setPokemons] = useState([]);
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  useEffect(() => {
-    console.log(state);
-    if (!state) {
-      navigate("/content", {
-        replace: true,
-      });
-    }
-  }, []);
+  const [search, setSearch] = useState("");
+  // const { state } = useLocation();
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   console.log(state);
+  //   if (!state) {
+  //     navigate("/content", {
+  //       replace: true,
+  //     });
+  //   }
+  // }, []);
   function submitHandler(event) {
     event.preventDefault();
     // mengambil value dari form
@@ -77,8 +78,8 @@ function Pokemon() {
   useEffect(() => {
     console.log("once");
     const url = "https://pokeapi.co/api/v2/pokemon?limit=10";
-    (async function () {
-      try {
+    try {
+      (async function () {
         const response = await fetch(url);
         // console.log(pokemons)
         if (!response.ok) throw new Error(response.status);
@@ -108,10 +109,10 @@ function Pokemon() {
           return obj;
         });
         setPokemons(await Promise.all(result));
-      } catch (err) {
-        throw err;
-      }
-    })();
+      })();
+    } catch (err) {
+      console.log(err);
+    }
     // return () => {
     //   alert("pokemon unmount");
     // };
@@ -129,11 +130,17 @@ function Pokemon() {
     <>
       {/* <Header /> */}
       <h1>Pokemon</h1>
+      <PokemonSearch inputValue={search} onInputValueChange={setSearch} />
       <main className="grid grid-cols-3 gap-[10px]">
         {pokemons.length > 0 &&
-          pokemons.map((pokemon, idx) => {
-            return <PokemonItem key={idx} pokemon={pokemon} />;
-          })}
+          pokemons
+            .filter((pokemon) => {
+              if (!search) return true;
+              return pokemon.name.toLowerCase().includes(search.toLowerCase());
+            })
+            .map((pokemon, idx) => {
+              return <PokemonItem key={idx} pokemon={pokemon} />;
+            })}
       </main>
       <section className="bg-beige mt-2 border-2 border-solid border-black p-2.5">
         <canvas id="grafiksaya"></canvas>
@@ -177,6 +184,32 @@ function Table(props) {
           })}
       </tbody>
     </table>
+  );
+}
+
+function PokemonSearch({ inputValue, onInputValueChange }) {
+  // const [search, setSearch] = useState("");
+  /**
+   * @param {Event} e
+   */
+  const submitHandler = (e) => {
+    e.preventDefault();
+    console.log(inputValue);
+  };
+  return (
+    <form className="p-2.5" onSubmit={submitHandler}>
+      <input
+        type="text"
+        name="search"
+        className="rounded-xl border-2 border-solid border-black p-1.25"
+        placeholder="Search Pokemon..."
+        value={inputValue}
+        onChange={(e) => onInputValueChange(e.target.value)}
+      />
+      <button className="ml-2 cursor-pointer rounded-xl border-2 border-solid border-black p-1.25 select-none active:border-emerald-500 active:bg-black active:text-white">
+        Search
+      </button>
+    </form>
   );
 }
 

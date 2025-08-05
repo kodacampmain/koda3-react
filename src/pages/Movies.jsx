@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 import MovieItem from "../components/MovieItem";
+import { ThemeContext } from "../contexts/theme/themeContext";
 // import Header from "../components/Header";
 
 function Movies() {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState(new Map());
   const [error, setError] = useState(null);
+  const { theme } = useContext(ThemeContext);
   const [searchParams, setSearchParams] = useSearchParams({ page: 1 });
   useEffect(() => {
     console.log(searchParams.toString());
@@ -177,8 +179,19 @@ function Movies() {
       // };
     });
   };
+  const genreStyle = (genreId) => {
+    return searchParams
+      .getAll("genre")
+      .includes(genres.get(genreId).toLowerCase())
+      ? "bg-gray-700 text-white"
+      : theme === "light"
+        ? "bg-white text-black"
+        : "bg-black text-white";
+  };
   return (
-    <>
+    <main
+      className={`${theme === "light" ? "bg-white text-black" : "bg-black text-white"}`}
+    >
       {/* <Header /> */}
       <h1>Movies</h1>
       <section className="flex flex-wrap gap-1.25">
@@ -191,7 +204,7 @@ function Movies() {
                 <p
                   key={genreId}
                   onClick={() => onClickGenre(genreId)}
-                  className={`${searchParams.getAll("genre").includes(genres.get(genreId).toLowerCase()) ? "bg-gray-700 text-white" : "bg-white text-black"} cursor-pointer`}
+                  className={`${genreStyle(genreId)} cursor-pointer`}
                 >
                   {genres.get(genreId)}
                 </p>,
@@ -205,7 +218,7 @@ function Movies() {
           return (
             <div
               key={idx}
-              className="cursor-pointer w-25 bg-amber-200 rounded-sm"
+              className="w-25 cursor-pointer rounded-sm bg-amber-200"
               onClick={() => {
                 // logika paginasi
                 setSearchParams((searchParams) => {
@@ -233,7 +246,7 @@ function Movies() {
             return <MovieItem movie={movie} key={movie.id} />;
           })}
       </div>
-    </>
+    </main>
   );
 }
 

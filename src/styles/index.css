@@ -12,12 +12,12 @@
   --spacing-1\/10: 10%;
 }
 
-@layer base {
+/* @layer base {
   h1 {
     letter-spacing: 10px;
     @apply rotate-90;
   }
-}
+} */
 
 @layer components {
   .btn {

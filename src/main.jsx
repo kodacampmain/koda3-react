@@ -5,12 +5,18 @@ import "./styles/index.css";
 import Router from "./Router";
 import ThemeProvider from "./contexts/theme/ThemeProvider";
 import CounterProvider from "./contexts/counter/CounterProvider";
+import AuthProvider from "./contexts/auth/AuthProvider";
+import TodoProvider from "./contexts/todo/todoProvider";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <CounterProvider>
-        <Router />
+        <AuthProvider>
+          <TodoProvider>
+            <Router />
+          </TodoProvider>
+        </AuthProvider>
       </CounterProvider>
     </ThemeProvider>
   </StrictMode>,

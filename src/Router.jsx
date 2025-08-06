@@ -9,6 +9,9 @@ import App from "./pages/App.jsx";
 import Form from "./pages/Form.jsx";
 import Order from "./pages/Order.jsx";
 import MovieDetail from "./pages/MovieDetail.jsx";
+import ShoppingApp from "./pages/ShoppingApp.jsx";
+import Todo from "./pages/TodoList.jsx";
+
 import { PrivateRoute, PrivateElement } from "./components/PrivateRoute.jsx";
 
 function Router() {
@@ -62,6 +65,8 @@ function Router() {
             />
             <Route path=":movieId" element={<MovieDetail />} />
           </Route>
+          <Route path="shopping" element={<ShoppingApp />} />
+          <Route path="todo" element={<Todo />} />
         </Route>
       </Routes>
     </BrowserRouter>

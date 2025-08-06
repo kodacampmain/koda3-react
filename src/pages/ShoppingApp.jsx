@@ -1,6 +1,8 @@
-import { useContext, useState } from "react";
-import { authContext } from "../contexts/auth/authContext";
+import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { authContext } from "../contexts/auth/authContext";
+import { addToCart, removeFromCart } from "../redux/slices/shoppingSlice";
 /**
  * @typedef {Keranjang}
  * @property {Object} product
@@ -8,44 +10,46 @@ import { authContext } from "../contexts/auth/authContext";
  * @property {number} product.price
  */
 function ShoppingApp() {
-  const [keranjang, setKeranjang] = useState([]);
+  // const [keranjang, setKeranjang] = useState([]);
   /**
    * @param {Object} product
    * @param {string} product.name
    * @param {number} product.price
    */
-  const addToKeranjang = (product) => {
-    setKeranjang((keranjang) => {
-      for (let belanja of keranjang) {
-        if (belanja.name === product.name) {
-          return keranjang;
-        }
-      }
-      return [...keranjang, product];
-    });
-  };
-  const removeFromKeranjang = (productName) => {
-    setKeranjang((keranjang) =>
-      keranjang.filter((product) => {
-        return product.name !== productName;
-      }),
-    );
-  };
+  // const addToKeranjang = (product) => {
+  //   setKeranjang((keranjang) => {
+  //     for (let belanja of keranjang) {
+  //       if (belanja.name === product.name) {
+  //         return keranjang;
+  //       }
+  //     }
+  //     return [...keranjang, product];
+  //   });
+  // };
+  // const removeFromKeranjang = (productName) => {
+  //   setKeranjang((keranjang) =>
+  //     keranjang.filter((product) => {
+  //       return product.name !== productName;
+  //     }),
+  //   );
+  // };
   return (
     <>
       <Header />
       <div className="grid grid-cols-[1fr_300px]">
-        <Product addToKeranjang={addToKeranjang} />
+        <Product
+        // addToKeranjang={addToKeranjang}
+        />
         <CartSummary
-          keranjang={keranjang}
-          removeFromKeranjang={removeFromKeranjang}
+        // keranjang={keranjang}
+        // removeFromKeranjang={removeFromKeranjang}
         />
       </div>
     </>
   );
 }
 
-function Product({ addToKeranjang }) {
+function Product() {
   //   const [products, _] = useState([
   //     { name: "a", price: 1000 },
   //     { name: "b", price: 2000 },
@@ -60,6 +64,7 @@ function Product({ addToKeranjang }) {
     { name: "d", price: 3000 },
     { name: "e", price: 1500 },
   ];
+  const dispatch = useDispatch();
   return (
     <section className="grid grid-cols-3 gap-2.5 p-5">
       {products.length > 0 &&
@@ -69,7 +74,12 @@ function Product({ addToKeranjang }) {
               className="cursor-pointer border-2 border-solid border-black p-1.25"
               key={idx}
               onClick={() => {
-                addToKeranjang(product);
+                // addToKeranjang(product);
+                dispatch(
+                  addToCart({
+                    product,
+                  }),
+                );
               }}
             >
               <p>{product.name}</p>
@@ -81,16 +91,18 @@ function Product({ addToKeranjang }) {
   );
 }
 
-function CartSummary({ keranjang, removeFromKeranjang }) {
+function CartSummary() {
+  const shoppingState = useSelector((state) => state.shopping);
+  const dispatch = useDispatch();
   return (
     <section className="p-5">
-      {keranjang.length === 0 && (
+      {shoppingState.cart.length === 0 && (
         <p>
           Keranjang sedang kosong, masukkan produk disamping terlebih dahulu
         </p>
       )}
-      {keranjang.length > 0 &&
-        keranjang.map((product, idx) => {
+      {shoppingState.cart.length > 0 &&
+        shoppingState.cart.map((product, idx) => {
           return (
             <div
               className="relative border-2 border-solid border-black p-1.25"
@@ -102,7 +114,14 @@ function CartSummary({ keranjang, removeFromKeranjang }) {
               </div>
               <div
                 className="absolute top-0 right-0 cursor-pointer rounded-full bg-gray-300 p-1.25 select-none"
-                onClick={() => removeFromKeranjang(product.name)}
+                onClick={() =>
+                  // removeFromKeranjang(product.name)
+                  dispatch(
+                    removeFromCart({
+                      productName: product.name,
+                    }),
+                  )
+                }
               >
                 X
               </div>

@@ -1,12 +1,23 @@
 import { useContext, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Seat from "../components/Seat";
 import { counterContext } from "../contexts/counter/CounterCountex";
+import {
+  increment,
+  decrement,
+  reset,
+  random,
+} from "../redux/slices/counterSlice";
 
 function Order() {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedSeatsDiv, setSelectedSeatsDiv] = useState([]);
   const { state, dispatch } = useContext(counterContext);
+  const counterState = useSelector((state) => {
+    return state.counter;
+  });
+  const reduxDispatch = useDispatch();
   function handleSubmit(event) {
     event.preventDefault();
     // const selected = [];
@@ -20,7 +31,7 @@ function Order() {
   }
   return (
     <div>
-      <div className="bg-primary p-2.5">
+      <div className="bg-primary mt-1.25 border-2 border-solid border-black p-2.5">
         <p className="font-mysoul text-center text-3xl">{state.count}</p>
         <div className="flex justify-center">
           <button
@@ -49,6 +60,37 @@ function Order() {
           </button>
         </div>
       </div>
+
+      <div className="bg-primary mt-1.25 border-2 border-solid border-black p-2.5">
+        <p className="font-mysoul text-center text-3xl">{counterState.count}</p>
+        <div className="flex justify-center">
+          <button
+            onClick={() => reduxDispatch(increment())}
+            className="mx-0.75 cursor-pointer border-2 border-solid border-black p-1.25 select-none"
+          >
+            Increment
+          </button>
+          <button
+            onClick={() => reduxDispatch(decrement())}
+            className="mx-0.75 cursor-pointer border-2 border-solid border-black p-1.25 select-none"
+          >
+            Decrement
+          </button>
+          <button
+            onClick={() => reduxDispatch(reset())}
+            className="mx-0.75 cursor-pointer border-2 border-solid border-black p-1.25 select-none"
+          >
+            Reset
+          </button>
+          <button
+            onClick={() => reduxDispatch(random())}
+            className="mx-0.75 cursor-pointer border-2 border-solid border-black p-1.25 select-none"
+          >
+            Random
+          </button>
+        </div>
+      </div>
+
       <div>Selected: {selectedSeats.sort()}</div>
       <form
         onSubmit={handleSubmit}

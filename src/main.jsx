@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 // Tailwind Import
 import "./styles/index.css";
 import Router from "./Router";
@@ -9,20 +10,22 @@ import CounterProvider from "./contexts/counter/CounterProvider";
 import AuthProvider from "./contexts/auth/AuthProvider";
 import TodoProvider from "./contexts/todo/todoProvider";
 
-import reduxStore from "./redux/store";
+import reduxStore, { persistedStore } from "./redux/store";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ReduxProvider store={reduxStore}>
-      <ThemeProvider>
-        <CounterProvider>
-          <AuthProvider>
-            <TodoProvider>
-              <Router />
-            </TodoProvider>
-          </AuthProvider>
-        </CounterProvider>
-      </ThemeProvider>
+      <PersistGate loading={null} persistor={persistedStore}>
+        <ThemeProvider>
+          <CounterProvider>
+            <AuthProvider>
+              <TodoProvider>
+                <Router />
+              </TodoProvider>
+            </AuthProvider>
+          </CounterProvider>
+        </ThemeProvider>
+      </PersistGate>
     </ReduxProvider>
   </StrictMode>,
 );

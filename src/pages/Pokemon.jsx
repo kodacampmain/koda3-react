@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { pokemonActions } from "../redux/slices/pokemonSlice";
 // import Header from "../components/Header";
 // import { useLocation, useNavigate } from "react-router";
 
 function Pokemon() {
+  const dispatch = useDispatch();
+  const pokemonState = useSelector((state) => state.pokemon);
   const [formData, setFormData] = useState(() => {
     const initialData = localStorage.getItem("koda3:data");
     if (!initialData) return [];
@@ -17,7 +21,7 @@ function Pokemon() {
   });
   const [count, setCount] = useState(0);
   const [error, setError] = useState(null);
-  const [pokemons, setPokemons] = useState([]);
+  // const [pokemons, setPokemons] = useState([]);
   const [search, setSearch] = useState("");
   // const { state } = useLocation();
   // const navigate = useNavigate();
@@ -75,72 +79,84 @@ function Pokemon() {
   // }, []);
 
   // Did Mount
-  useEffect(() => {
-    console.log("once");
-    const url = "https://pokeapi.co/api/v2/pokemon?limit=10";
-    try {
-      (async function () {
-        const response = await fetch(url);
-        // console.log(pokemons)
-        if (!response.ok) throw new Error(response.status);
-        const pokemonData = await response.json();
-        const result = pokemonData.results.map(async (pokemon, idx) => {
-          const obj = {
-            name: pokemon.name,
-          };
-          try {
-            const response = await fetch(pokemon.url);
-            if (!response.ok) throw response.statusText;
-            const pokemonDetail = await response.json();
-            const pokemonAbilities = pokemonDetail.abilities.map(
-              (abilityItem) => {
-                return abilityItem.ability.name;
-              },
-            );
-            Object.assign(obj, {
-              abilities: pokemonAbilities,
-            });
-          } catch (err) {
-            const error = new Error(
-              `Error Fetching Pokemon Detail at index ${idx}\n${err.status}: ${err.statusText}`,
-            );
-            throw error;
-          }
-          return obj;
-        });
-        setPokemons(await Promise.all(result));
-      })();
-    } catch (err) {
-      console.log(err);
-    }
-    // return () => {
-    //   alert("pokemon unmount");
-    // };
-  }, []);
+  // useEffect(() => {
+  //   console.log("once");
+  //   const url = "https://pokeapi.co/api/v2/pokemon?limit=10";
+  //   try {
+  //     (async function () {
+  //       const response = await fetch(url);
+  //       // console.log(pokemons)
+  //       if (!response.ok) throw new Error(response.status);
+  //       const pokemonData = await response.json();
+  //       const result = pokemonData.results.map(async (pokemon, idx) => {
+  //         const obj = {
+  //           name: pokemon.name,
+  //         };
+  //         try {
+  //           const response = await fetch(pokemon.url);
+  //           if (!response.ok) throw response.statusText;
+  //           const pokemonDetail = await response.json();
+  //           const pokemonAbilities = pokemonDetail.abilities.map(
+  //             (abilityItem) => {
+  //               return abilityItem.ability.name;
+  //             },
+  //           );
+  //           Object.assign(obj, {
+  //             abilities: pokemonAbilities,
+  //           });
+  //         } catch (err) {
+  //           const error = new Error(
+  //             `Error Fetching Pokemon Detail at index ${idx}\n${err.status}: ${err.statusText}`,
+  //           );
+  //           throw error;
+  //         }
+  //         return obj;
+  //       });
+  //       setPokemons(await Promise.all(result));
+  //     })();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  //   // return () => {
+  //   //   alert("pokemon unmount");
+  //   // };
+  // }, []);
   // Did Update
   useEffect(() => {
     console.log("for formData");
     localStorage.setItem("koda3:data", JSON.stringify(formData));
   }, [formData]);
   // Every Update
+  // useEffect(() => {
+  //   console.log("for everyone");
+  // });
   useEffect(() => {
-    console.log("for everyone");
-  });
+    dispatch(pokemonActions.getPokemonThunk());
+  }, []);
   return (
     <>
       {/* <Header /> */}
       <h1>Pokemon</h1>
       <PokemonSearch inputValue={search} onInputValueChange={setSearch} />
       <main className="grid grid-cols-3 gap-[10px]">
-        {pokemons.length > 0 &&
-          pokemons
+        {pokemonState.isLoading && (
+          <div className="animate-speeen loader my-2.5 w-fit pb-2 font-sans text-3xl font-bold before:content-['Loading...']"></div>
+        )}
+        {pokemonState.isSuccess &&
+          pokemonState.pokemons
             .filter((pokemon) => {
               if (!search) return true;
               return pokemon.name.toLowerCase().includes(search.toLowerCase());
             })
             .map((pokemon, idx) => {
-              return <PokemonItem key={idx} pokemon={pokemon} />;
+              return <PokemonItem key={idx} pokemon={pokemon} idx={idx} />;
             })}
+        {pokemonState.isFailed && (
+          <p className="text-bold col-start-1 -col-end-1 text-5xl text-red-500">
+            {/* {JSON.stringify(pokemonState.error.payload)} */}
+            Internal Server Error
+          </p>
+        )}
       </main>
       <section className="bg-beige mt-2 border-2 border-solid border-black p-2.5">
         <canvas id="grafiksaya"></canvas>
@@ -213,9 +229,13 @@ function PokemonSearch({ inputValue, onInputValueChange }) {
   );
 }
 
-function PokemonItem({ pokemon }) {
+function PokemonItem({ pokemon, idx }) {
+  const dispatch = useDispatch();
   return (
-    <section className="border-2 border-solid border-black p-1.25">
+    <section
+      className="border-2 border-solid border-black p-1.25"
+      onClick={() => dispatch(pokemonActions.selectPokemon(idx))}
+    >
       <div>
         <p className="font-[cursive] text-2xl">{pokemon.name}</p>
       </div>

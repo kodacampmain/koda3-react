@@ -8,8 +8,16 @@
   /* --color-primary: var(--primary); */
   --color-primary: goldenrod;
 
-  --spacing-2: 9px;
+  /* --spacing-2: 9px; */
   --spacing-1\/10: 10%;
+
+  --linear-loader: linear-gradient(currentColor 0 0) 0 100%/0% 3px no-repeat;
+  --animate-speeen: l2 2s linear infinite;
+  @keyframes l2 {
+    to {
+      background-size: 100% 3px;
+    }
+  }
 }
 
 /* @layer base {
@@ -32,6 +40,9 @@
     @variant theme-midnight {
       color: red;
     }
+  }
+  .loader {
+    background: var(--linear-loader);
   }
 }
 

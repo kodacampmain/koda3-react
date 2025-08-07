@@ -19,6 +19,12 @@
   }
 } */
 
+@layer base {
+  button {
+    @apply cursor-pointer border-2 border-solid border-black p-1.25 select-none;
+  }
+}
+
 @layer components {
   .btn {
     /* transition: all 1s ease; */

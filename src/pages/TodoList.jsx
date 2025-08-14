@@ -74,7 +74,7 @@ function TodoList({ openModal }) {
                 key={idx}
               >
                 <Paragraph
-                  className="font-mysoul text-3xl text-red-500"
+                  className="md:font-mysoul font-serif text-3xl text-red-500"
                   onClick={() => {
                     // console.log(todo.title);
                     openModal(true, idx, todo.title);

@@ -8,7 +8,7 @@ import Router from "./Router";
 import ThemeProvider from "./contexts/theme/ThemeProvider";
 import CounterProvider from "./contexts/counter/CounterProvider";
 import AuthProvider from "./contexts/auth/AuthProvider";
-import TodoProvider from "./contexts/todo/todoProvider";
+import TodoProvider from "./contexts/todo/TodoProvider";
 
 import reduxStore, { persistedStore } from "./redux/store";
 

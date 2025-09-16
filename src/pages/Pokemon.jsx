@@ -7,7 +7,8 @@ import { pokemonActions } from "../redux/slices/pokemonSlice";
 function Pokemon() {
   const dispatch = useDispatch();
   const pokemonState = useSelector((state) => state.pokemon);
-  const [formData, setFormData] = useState(() => {
+  const [token, setToken] = useState("");
+  const [formData] = useState(() => {
     const initialData = localStorage.getItem("koda3:data");
     if (!initialData) return [];
     try {
@@ -33,43 +34,99 @@ function Pokemon() {
   //     });
   //   }
   // }, []);
-  function submitHandler(event) {
+  // function submitHandler(event) {
+  //   event.preventDefault();
+  //   // mengambil value dari form
+  //   const form = event.target;
+  //   const inputData = {};
+  //   // cek duplikar data nama
+  //   let isDuplicate = false;
+  //   // formData.forEach((data) => {
+  //   //   if (data.nama === form.nama.value) {
+  //   //     isDuplicate = true;
+  //   //   }
+  //   // });
+  //   for (let data of formData) {
+  //     if (data.nama === form.nama.value) {
+  //       isDuplicate = true;
+  //       break;
+  //     }
+  //   }
+  //   if (isDuplicate) {
+  //     setError(new Error("duplicate data"));
+  //     return;
+  //   }
+  //   // validasi nama
+  //   const re = /^(?=[a-zA-Z]+)[a-zA-Z\s]{1,}$/;
+  //   if (!re.test(form.nama.value)) {
+  //     setError(new Error("invalid format"));
+  //     return;
+  //   }
+  //   // mengambil data nama & umur
+  //   Object.assign(inputData, {
+  //     nama: form.nama.value,
+  //     umur: form.umur.value,
+  //   });
+  //   setFormData((formData) => {
+  //     return [...formData, inputData];
+  //   });
+  //   setError(null);
+  // }
+  function loginHandler(event) {
     event.preventDefault();
-    // mengambil value dari form
-    const form = event.target;
-    const inputData = {};
-    // cek duplikar data nama
-    let isDuplicate = false;
-    // formData.forEach((data) => {
-    //   if (data.nama === form.nama.value) {
-    //     isDuplicate = true;
-    //   }
-    // });
-    for (let data of formData) {
-      if (data.nama === form.nama.value) {
-        isDuplicate = true;
-        break;
-      }
-    }
-    if (isDuplicate) {
-      setError(new Error("duplicate data"));
+    const name = event.target.name.value;
+    const pwd = event.target.pwd.value;
+
+    // empty validation
+    if (name.length === 0 || pwd.length === 0) {
+      setError("nama/password tidak boleh kosong");
       return;
     }
-    // validasi nama
-    const re = /^(?=[a-zA-Z]+)[a-zA-Z\s]{1,}$/;
-    if (!re.test(form.nama.value)) {
-      setError(new Error("invalid format"));
-      return;
-    }
-    // mengambil data nama & umur
-    Object.assign(inputData, {
-      nama: form.nama.value,
-      umur: form.umur.value,
+
+    const body = {
+      nama_siswa: name,
+      password: pwd,
+    };
+    const request = new Request(`${import.meta.env.VITE_BE_HOST}/auth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
-    setFormData((formData) => {
-      return [...formData, inputData];
+    fetch(request, {
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (!response.ok) throw response.statusText;
+        return response.json();
+      })
+      .then((res) => {
+        setToken(res.data.token);
+      })
+      .catch((err) => console.log(err));
+  }
+  function editHandler(event) {
+    event.preventDefault();
+    const files = event.target.profile.files;
+    const request = new Request(`${import.meta.env.VITE_BE_HOST}/students`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    setError(null);
+    const formdata = new FormData();
+    formdata.append("image", files[0]);
+    fetch(request, {
+      body: formdata,
+    })
+      .then((response) => {
+        if (!response.ok) throw response.statusText;
+        return response.json();
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   }
   // useEffect(() => {
   //   // Start Synchronize (did mount, did update)
@@ -133,6 +190,22 @@ function Pokemon() {
   useEffect(() => {
     dispatch(pokemonActions.getPokemonThunk());
   }, []);
+  useEffect(() => {
+    const url = "http://localhost:3000/ping";
+    const request = new Request(url, {
+      method: "GET",
+      // headers: {
+      //   "Authorization": "Bearer "
+      // }
+    });
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) throw response.statusText;
+        return response.json();
+      })
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <>
       {/* <Header /> */}
@@ -164,14 +237,19 @@ function Pokemon() {
       <button onClick={() => setCount((count) => count + 1)}>
         Clicked {count} times
       </button>
-      <form onSubmit={submitHandler}>
+      <form onSubmit={loginHandler}>
         <label htmlFor="name">Nama</label>
         <input type="text" name="nama" id="name" />
         {error && <p>{error.message}</p>}
         <br />
-        <label htmlFor="age">Umur</label>
-        <input type="number" name="umur" id="age" />
+        <label htmlFor="pwd">Password</label>
+        <input type="password" name="pwd" id="pwd" />
         <br />
+        <button type="submit">SUBMIT</button>
+      </form>
+      <form onSubmit={editHandler}>
+        <label htmlFor="file">Masukkan foto terbaru</label>
+        <input type="file" name="profile" id="file" />
         <button type="submit">SUBMIT</button>
       </form>
       <Table data={formData} />

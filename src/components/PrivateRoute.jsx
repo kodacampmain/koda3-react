@@ -33,6 +33,7 @@ export function PrivateRoute({ redirectTo, children }) {
       navigate(redirectTo, { replace: true });
     }
   }, []);
+  // useEffect() untuk ketika token nya expired
   // jika kondisi terpenuhi, maka boleh navigasi
   return children;
 }

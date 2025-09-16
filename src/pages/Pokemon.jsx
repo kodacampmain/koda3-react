@@ -191,7 +191,7 @@ function Pokemon() {
     dispatch(pokemonActions.getPokemonThunk());
   }, []);
   useEffect(() => {
-    const url = "http://localhost:3000/ping";
+    const url = "http://localhost:3000/products";
     const request = new Request(url, {
       method: "GET",
       // headers: {

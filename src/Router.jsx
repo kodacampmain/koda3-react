@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+import { BrowserRouter, Routes, Route, Outlet, Link } from "react-router";
 
 import DomMinitask from "./pages/DomMinitask.jsx";
 import Pokemon from "./pages/Pokemon.jsx";
@@ -67,6 +67,18 @@ function Router() {
           </Route>
           <Route path="shopping" element={<ShoppingApp />} />
           <Route path="todo" element={<Todo />} />
+          {/* Not Found Route */}
+          <Route
+            path="*"
+            element={
+              <div>
+                <p className="text-3xl font-bold">Rute Tidak Ditemukan</p>
+                <p className="text-xl">
+                  kembali ke <Link to={"/"}>Home</Link>
+                </p>
+              </div>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
